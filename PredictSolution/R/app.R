@@ -11,13 +11,12 @@
 #' trainData <- importLibrariesAndDB()
 #' @export
 importLibrariesAndDB <- function (){
-  required_packages <- c('rattle','rpart.plot','RColorBrewer','kknn','RMariaDB','shiny','plyr') #Every package your script needs
+  required_packages <- c('rpart.plot','RColorBrewer','kknn','RMariaDB','shiny','plyr') #Every package your script needs
   new_packages <- required_packages[!(required_packages %in% installed.packages()[,"Package"])] #Get all the ones not already installed
   if(length(new_packages >= 1)){
     install.packages(new_packages) #Install all packages not already installed
   }
   library(rpart)
-  library(rattle)
   library (rpart.plot)
   library(RColorBrewer)
   library(class)
@@ -25,11 +24,15 @@ importLibrariesAndDB <- function (){
   library(RMariaDB)
   library(shiny)
   library (plyr)
+  #Variables for connection to database
+  dbName <- "predictamentdb"
+  tableName <- "train_data"
+  localusername <- "root"
+  localuserpassword <- "root" #Change to "password" for GCP
   #Connecting to the database to get the data frame
-  localuserpassword <- "root"
-  PredictamentDB <- dbConnect(RMariaDB::MariaDB(), user='root', password=localuserpassword, dbname='predictamentdb', host='localhost')
+  PredictamentDB <- dbConnect(RMariaDB::MariaDB(), user=localusername, password=localuserpassword, dbname=dbName, host='localhost')
   dbListTables(PredictamentDB)
-  query <- "SELECT * FROM train_data;"
+  query <- paste("SELECT * FROM ", tableName,";", sep="")
   allData <- dbFetch(dbSendQuery(PredictamentDB, query))
   dbDisconnect(PredictamentDB)
   return(allData)
@@ -49,6 +52,7 @@ options(scipen=999)
 #' @return Cleaned dataset
 #' @examples
 #' trainClean <- cleanData(trainData)
+#' @export
 cleanData <- function(dat){
   if(length(dat) == 81){
     dat$CentralAir<- factor(dat$CentralAir, levels = c("N","Y"), labels = c(0,1), ordered = TRUE)
@@ -101,6 +105,7 @@ cleanData <- function(dat){
 #' @return No value returned
 #' @example
 #' ExportRPFVals()
+#' @export
 ExportRPFVals <- function(){
   names <- c()
   rVals <- c()
@@ -127,6 +132,7 @@ ExportRPFVals <- function(){
 #' @return List of numeric values between 0-1
 #' @example
 #' lapply(allData[,2:length(allData)], FeatureScalling)
+#' @export
 FeatureScalling <- function(x) {
   x <- as.numeric(x)
   return((x-min(x))/(max(x)-min(x)))
@@ -141,6 +147,7 @@ FeatureScalling <- function(x) {
 #' @return Normalised dataset
 #' @example
 #' dataNormalised <- normaliseData(trainData)
+#' @export
 normaliseData <- function(dat){
   #Normalise Data
   Dat_Normalised <- subset(dat, select=c(SalePrice,OverallQual,GrLivArea,ExterQual,KitchenQual,BsmtQual,GarageCars,TotalBsmtSF,X1stFlrSF,FullBath,TotRmsAbvGrd,YearBuilt))
@@ -158,6 +165,7 @@ normaliseData <- function(dat){
 #' @return Weighted K-Nearest Neighbor model
 #' @example
 #' knnModel <- weightedKNNModel()
+#' @export
 weightedKNNModel <- function(){
   #Compute k-value to use with the classifier. Rule of thumb is square root of n of observations
   k_value <- floor(sqrt(length(allData_Normalised[,1])))
@@ -175,6 +183,7 @@ weightedKNNModel <- function(){
 #' @return Predicted sale price rounded to the nearest thousand
 #' @example
 #' weightedKNNPredict(input)
+#' @export
 weightedKNNPredict <- function(input){
   #inp <- list("OverallQual"=6,"GrLivArea"=1800,"ExterQual"="Excellent","KitchenQual"="Good","BsmtQual"="Good","GarageCars"=2,
   #            "TotalBsmtSF"=800,"X1stFlrSF"=800,"FullBath"=2,"TotRmsAbvGrd"=5,"YearBuilt"=1997)
@@ -193,41 +202,41 @@ weightedKNNPredict <- function(input){
 }
 
 #Design UI
-ui <- fluidPage(
-  titlePanel("Predic(t)ament!"),
-  sidebarPanel(
-    fluidRow(
-      column(2,
-             sliderInput(inputId = "OverallQual", label = "Overal Quality",min = 0, max = 10, value = 5)),
-      column(2,
-             selectInput(inputId = "ExterQual", label = "Exterior Quality", choices = c("Excellent","Good","Average","Fair","Poor"))),
-      column(3,
-             selectInput(inputId = "KitchenQual", label = "Kitchen Quality", choices = c("Excellent","Good","Average","Fair","Poor"))),
-      column(3,
-             selectInput(inputId = "BsmtQual", label = "Basement Quality", choices = c("Excellent","Good","Typical","Fair","Poor","No Basement")))
+ui <- shiny::fluidPage(
+  shiny::titlePanel("Predic(t)ament!"),
+  shiny::sidebarPanel(
+    shiny::fluidRow(
+      shiny::column(2,
+                    shiny::sliderInput(inputId = "OverallQual", label = "Overal Quality",min = 0, max = 10, value = 5)),
+      shiny:: column(2,
+                     shiny::selectInput(inputId = "ExterQual", label = "Exterior Quality", choices = c("Excellent","Good","Average","Fair","Poor"))),
+      shiny::column(3,
+                    shiny::selectInput(inputId = "KitchenQual", label = "Kitchen Quality", choices = c("Excellent","Good","Average","Fair","Poor"))),
+      shiny::column(3,
+                    shiny::selectInput(inputId = "BsmtQual", label = "Basement Quality", choices = c("Excellent","Good","Typical","Fair","Poor","No Basement")))
     ),
-    fluidRow(
-      column(3,
-             textInput(inputId = "GrLivArea", label = "Above ground living area square feet", value = 2423)),
-      column(3,
-             textInput(inputId = "TotalBsmtSF", label = "Basement area square feet", value = 1234)),
-      column(3,
-             textInput(inputId = "X1stFlrSF", label = "1st floor area square feet", value = 1342)),
-      column(3,
-             textInput(inputId = "YearBuilt", label = "Original construction date", value = 1997))
+    shiny::fluidRow(
+      shiny::column(3,
+                    shiny::textInput(inputId = "GrLivArea", label = "Above ground living area square feet", value = 2423)),
+      shiny::column(3,
+                    shiny::textInput(inputId = "TotalBsmtSF", label = "Basement area square feet", value = 1234)),
+      shiny::column(3,
+                    shiny::textInput(inputId = "X1stFlrSF", label = "1st floor area square feet", value = 1342)),
+      shiny::column(3,
+                    shiny::textInput(inputId = "YearBuilt", label = "Original construction date", value = 1997))
     ),
-    fluidRow(
-      column(3,
-             sliderInput(inputId = "GarageCars", label = "Garage car capacity",min = 0, max = 10, value = 2)),
-      column(3,
-             sliderInput(inputId = "FullBath", label = "Bathrooms above ground",min = 0, max = 10, value = 2)),
-      column(3,
-             sliderInput(inputId = "TotRmsAbvGrd", label = "Rooms above ground (not including bathrooms",min = 1, max = 20, value = 0))
+    shiny::fluidRow(
+      shiny::column(3,
+                    shiny::sliderInput(inputId = "GarageCars", label = "Garage car capacity",min = 0, max = 10, value = 2)),
+      shiny::column(3,
+                    shiny::sliderInput(inputId = "FullBath", label = "Bathrooms above ground",min = 0, max = 10, value = 2)),
+      shiny::column(3,
+                    shiny::sliderInput(inputId = "TotRmsAbvGrd", label = "Rooms above ground (not including bathrooms",min = 1, max = 20, value = 0))
     ),
     width = 20),
-  mainPanel(
-    textOutput(outputId = "Predicted"),
-    submitButton("Check price")
+  shiny::mainPanel(
+    shiny::textOutput(outputId = "Predicted"),
+    shiny::submitButton("Check price")
   )
 )
 
