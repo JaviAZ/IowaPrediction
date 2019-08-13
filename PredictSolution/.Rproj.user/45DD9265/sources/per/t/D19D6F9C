@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1565623568745.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "12|36|35|0|\n51|27|92|0|\n103|28|119|0|\n129|32|132|0|\n143|31|150|0|\n160|31|166|0|\n177|38|192|0|\n",
+    "hash" : "1990593994",
+    "id" : "D19D6F9C",
+    "lastKnownWriteTime" : 1565687267,
+    "last_content_update" : 1565687271222,
+    "path" : "C:/Users/Admin/Desktop/QAExercises/R/IndvProject/PredictSolution/R/Predic(t)amentSolution.R",
+    "project_path" : "R/Predic(t)amentSolution.R",
+    "properties" : {
+        "cursorPosition" : "26,16",
+        "scrollLine" : "0"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
