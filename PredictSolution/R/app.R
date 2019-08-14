@@ -103,7 +103,7 @@ cleanData <- function(dat){
 #' @param NA
 #' no parameters needed
 #' @return No value returned
-#' @example
+#' @examples
 #' ExportRPFVals()
 #' @export
 ExportRPFVals <- function(){
@@ -145,7 +145,7 @@ FeatureScalling <- function(x) {
 #' @param Dataset
 #' Takes in the train dataset
 #' @return Normalised dataset
-#' @example
+#' @examples
 #' dataNormalised <- normaliseData(trainData)
 #' @export
 normaliseData <- function(dat){
@@ -163,7 +163,7 @@ normaliseData <- function(dat){
 #' @param NA
 #' no parameters needed
 #' @return Weighted K-Nearest Neighbor model
-#' @example
+#' @examples
 #' knnModel <- weightedKNNModel()
 #' @export
 weightedKNNModel <- function(){
@@ -181,7 +181,7 @@ weightedKNNModel <- function(){
 #' @param list
 #' List with user inputs from UI
 #' @return Predicted sale price rounded to the nearest thousand
-#' @example
+#' @examples
 #' weightedKNNPredict(input)
 #' @export
 weightedKNNPredict <- function(input){

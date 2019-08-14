@@ -20,5 +20,6 @@ If all the above have been installed, in Rstudio open the package "PredictSoluti
 
 If you would like to see a description of any of the methods, enter into the RStudio console "devtools::document()" and then "?functionName" for more information on each function.
 
+---
 ### 3. FAQ
 This section is currently in development.

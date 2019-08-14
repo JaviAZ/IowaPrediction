@@ -16,3 +16,6 @@ Predicted sale price rounded to the nearest thousand
 This function calculates a sale price prediction based on a previously trained K-Nearest Neighbormodel and
 the user input
 }
+\examples{
+weightedKNNPredict(input)
+}

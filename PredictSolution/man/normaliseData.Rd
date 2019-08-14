@@ -16,3 +16,6 @@ Normalised dataset
 This function creates a subset of the data frame with pre-selected columns and removes rows with
 NA values
 }
+\examples{
+dataNormalised <- normaliseData(trainData)
+}

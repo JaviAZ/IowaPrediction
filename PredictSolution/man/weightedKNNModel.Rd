@@ -15,3 +15,6 @@ Weighted K-Nearest Neighbor model
 \description{
 This function calculates a k value and trains a weighted knn model with the train data
 }
+\examples{
+knnModel <- weightedKNNModel()
+}

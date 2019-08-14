@@ -16,3 +16,6 @@ No value returned
 This functionCalculates R values, P values and F values for each column and export these into a CSV
 to be able to compare which columns affect the sale price the most to then be used in the prediction
 }
+\examples{
+ExportRPFVals()
+}
