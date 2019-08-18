@@ -203,7 +203,7 @@ weightedKNNPredict <- function(input){
 
 #Design UI
 ui <- shiny::fluidPage(
-  shiny::titlePanel("Predic(t)ament!"),
+  shiny::titlePanel("Iowa House Prices Prediction System"),
   shiny::sidebarPanel(
     shiny::fluidRow(
       shiny::column(2,
@@ -242,7 +242,7 @@ ui <- shiny::fluidPage(
 
 server <- function(input,output){
   output$Predicted <- renderText({
-    paste("Predicted Value of \U00A3", weightedKNNPredict(input))
+    paste("Predicted Value of \U0024", weightedKNNPredict(input))
   })
 }
 
