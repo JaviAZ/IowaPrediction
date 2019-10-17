@@ -17,7 +17,7 @@ The code is set up for a database called "predictamentdb" and a table called "tr
 
 If all the above have been installed, download/clone this repository, and in Rstudio open the package "PredictSolution", open "app.R" from the "/R" directory in the package and "Run App". 
 
-The application can also be found at http://35.246.16.145. 
+The application can also be found at http://34.89.74.157. 
 
 If you would like to see a description of any of the methods, enter into the RStudio console "devtools::document()" and then "?functionName" for more information on each function.
 
